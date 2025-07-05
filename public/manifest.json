@@ -1,0 +1,17 @@
+{
+  "name": "e-Invoice Hub by Thinkdigi",
+  "short_name": "e-Invoice Hub",
+  "description": "Futuristinen automaattinen e-laskutus Shopify-tilauksista Maventa-palvelun kautta",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#d946ef",
+  "icons": [
+    {
+      "src": "/shopify_app.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

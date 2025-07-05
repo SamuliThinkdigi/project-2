@@ -1,0 +1,13 @@
+# Netlify redirects file
+
+# Redirect auth callback
+/auth/*  /index.html  200
+
+# Redirect webhooks to Netlify functions
+/webhooks/*  /.netlify/functions/webhooks  200
+
+# Redirect API calls to Netlify functions
+/api/*  /.netlify/functions/api  200
+
+# Redirect everything else to index.html for SPA routing
+/*  /index.html  200

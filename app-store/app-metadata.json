@@ -1,0 +1,68 @@
+{
+  "app": {
+    "name": "Thinkdigi Invoice Hub",
+    "tagline": "Automaattinen e-laskutus Shopify-tilauksista Maventa-palvelun kautta",
+    "category": "Store management",
+    "subcategory": "Accounting",
+    "pricing_model": "subscription",
+    "free_trial": {
+      "enabled": true,
+      "duration_days": 7
+    },
+    "languages": ["fi", "en"],
+    "countries": ["FI", "SE", "NO", "DK"],
+    "app_url": "https://invoice-hub.thinkdigi.fi",
+    "support_url": "https://invoice-hub.thinkdigi.fi/support",
+    "privacy_policy_url": "https://invoice-hub.thinkdigi.fi/privacy",
+    "terms_of_service_url": "https://invoice-hub.thinkdigi.fi/terms"
+  },
+  "developer": {
+    "name": "Thinkdigi Oy",
+    "email": "partners@thinkdigi.fi",
+    "website": "https://thinkdigi.fi",
+    "support_email": "support@thinkdigi.fi",
+    "country": "FI",
+    "business_id": "2847123-4"
+  },
+  "features": [
+    "Automaattinen laskutus",
+    "Maventa-integraatio",
+    "ALV-käsittely",
+    "GDPR-yhteensopiva",
+    "Suomenkielinen tuki",
+    "Reaaliaikainen synkronointi",
+    "API-rajapinta",
+    "Webhook-tuki",
+    "Raportointi",
+    "Maksumuistutukset"
+  ],
+  "keywords": [
+    "e-laskutus",
+    "maventa",
+    "suomi",
+    "finland",
+    "invoice",
+    "accounting",
+    "automation",
+    "vat",
+    "alv",
+    "kirjanpito",
+    "taloushallinto",
+    "laskutus"
+  ],
+  "scopes": [
+    "read_orders",
+    "write_orders",
+    "read_products",
+    "write_products", 
+    "read_customers",
+    "write_customers",
+    "write_webhooks"
+  ],
+  "webhooks": [
+    "orders/create",
+    "orders/updated",
+    "orders/paid",
+    "app/uninstalled"
+  ]
+}

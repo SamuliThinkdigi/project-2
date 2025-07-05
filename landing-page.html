@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinkdigi Invoice Hub - E-laskutus Shopifylle</title>
+    <style>
+        /* Base styles */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #059669;
+            --secondary-dark: #047857;
+            --accent: #7c3aed;
+            --neutral: #64748b;
+            --neutral-light: #f8fafc;
+            --neutral-dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--neutral-dark);
+            background-color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+        }
+        
+        h3 {
+            font-size: 2rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.25);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(37, 99, 235, 0.35);
+        }
+        
+        .btn-secondary {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 18px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a5b4fc' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+        
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--neutral);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--neutral);
+            font-weight: 500;
+        }
+        
+        .hero-image {
+            position: relative;
+        }
+        
+        .dashboard-image {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .floating-card {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .card-1 {
+            top: 20%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+        
+        .card-2 {
+            bottom: 20%;
+            right: -10%;
+            animation-delay: 1.5s;
+        }
+        
+        .card-icon {
+            font-size: 24px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--neutral-dark);
+        }
+        
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--neutral);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Features Section */
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--neutral);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features {
+            background: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+        
+        .feature-card {
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: white;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .feature-description {
+            color: var(--neutral);
+            line-height: 1.6;
+        }
+        
+        /* How it works */
+        .how-it-works {
+            background: var(--neutral-light);
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 48px;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 24px;
+        }
+        
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .step-description {
+            color: var(--neutral);
+            line-height: 1.6;
+        }
+        
+        /* Pricing */
+        .pricing {
+            background: white;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .pricing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-price {
+            margin-bottom: 8px;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .period {
+            font-size: 1rem;
+            color: var(--neutral);
+        }
+        
+        .pricing-description {
+            color: var(--neutral);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+        
+        .pricing-features li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 24px;
+        }
+        
+        .pricing-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        .pricing-note {
+            text-align: center;
+            color: var(--neutral);
+            font-size: 14px;
+        }
+        
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+        }
+        
+        .cta-content {
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .cta-description {
+            font-size: 1.125rem;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+        
+        .cta-features {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+        }
+        
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+                gap: 32px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-features {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .hero {
+                padding: 100px 0 60px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Automaattinen e-laskutus 
+                        <span class="gradient-text">Shopify-kaupoille</span>
+                    </h1>
+                    <p class="hero-description">
+                        Yhdistä Shopify-kauppasi Maventa e-laskutuspalveluun ja automatisoi 
+                        laskutusprosessisi. Suomalainen ratkaisu, joka noudattaa kotimaisia 
+                        laskutusvaatimuksia.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="https://apps.shopify.com/thinkdigi-invoice-hub" class="btn btn-primary btn-large">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                            Asenna sovellus
+                        </a>
+                        <a href="#features" class="btn btn-secondary btn-large">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            Lue lisää
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Shopify-kauppaa</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">50k+</span>
+                            <span class="stat-label">Laskua lähetetty</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">99.9%</span>
+                            <span class="stat-label">Käytettävyys</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Invoice Hub Dashboard" class="dashboard-image">
+                    <div class="floating-card card-1">
+                        <div class="card-icon">📧</div>
+                        <div class="card-text">
+                            <div class="card-title">Lasku lähetetty</div>
+                            <div class="card-subtitle">INV-2024-001</div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="card-icon">💰</div>
+                        <div class="card-text">
+                            <div class="card-title">Maksu saapunut</div>
+                            <div class="card-subtitle">€1,250.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Miksi valita Invoice Hub?</h2>
+                <p class="section-description">
+                    Kehitetty suomalaisille yrityksille, suomalaisten lakien mukaisesti
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Automaattinen laskutus</h3>
+                    <p class="feature-description">
+                        Laskut luodaan automaattisesti kun asiakas tekee tilauksen. 
+                        Säästä aikaa ja vähennä virheitä.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Maventa-integraatio</h3>
+                    <p class="feature-description">
+                        Suora yhteys Maventa e-laskutuspalveluun. Laskut toimitetaan 
+                        turvallisesti ja nopeasti.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">ALV-käsittely</h3>
+                    <p class="feature-description">
+                        Automaattinen ALV-laskenta kaikilla Suomen verokannoilla. 
+                        Valmiit raportit viranomaisille.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">GDPR-yhteensopiva</h3>
+                    <p class="feature-description">
+                        Kaikki tiedot käsitellään turvallisesti EU:n alueella. 
+                        Täysi GDPR-compliance.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Reaaliaikainen synkronointi</h3>
+                    <p class="feature-description">
+                        Tuotteet, asiakkaat ja tilaukset synkronoidaan automaattisesti 
+                        Shopifysta.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Kattavat raportit</h3>
+                    <p class="feature-description">
+                        Seuraa laskutusta, kassavirtaa ja ALV-tietoja. 
+                        Vie tiedot kirjanpitoon.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Näin se toimii</h2>
+                <p class="section-description">
+                    Kolme yksinkertaista vaihetta automaattiseen laskutukseen
+                </p>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Asenna ja määritä</h3>
+                        <p class="step-description">
+                            Asenna sovellus Shopify App Storesta ja yhdistä Maventa-tilisi. 
+                            Määritä laskutusasetukset.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Aktivoi automaatio</h3>
+                        <p class="step-description">
+                            Kytke automaattinen laskutus päälle. Sovellus alkaa luoda 
+                            laskuja uusista tilauksista.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Seuraa ja hallitse</h3>
+                        <p class="step-description">
+                            Seuraa laskujen tilaa dashboardista. Saat ilmoitukset 
+                            maksuista ja erääntyneistä laskuista.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Hinnoittelu</h2>
+                <p class="section-description">
+                    Valitse yrityksellesi sopiva paketti. Kaikki paketit sisältävät 7 päivän ilmaisen kokeilun.
+                </p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Starter</h3>
+                        <div class="pricing-price">
+                            <span class="price">29,90€</span>
+                            <span class="period">/kk</span>
+                        </div>
+                        <p class="pricing-description">Pienille kaupoille</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Enintään 10 laskua/kk</li>
+                        <li>Automaattinen laskutus</li>
+                        <li>Maventa-integraatio</li>
+                        <li>ALV-käsittely</li>
+                        <li>Sähköpostituki</li>
+                    </ul>
+                    <a href="https://apps.shopify.com/thinkdigi-invoice-hub" class="btn btn-secondary">Aloita ilmaiseksi</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Suosituin</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Professional</h3>
+                        <div class="pricing-price">
+                            <span class="price">49€</span>
+                            <span class="period">/kk</span>
+                        </div>
+                        <p class="pricing-description">Kasvavat yritykset</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Enintään 100 laskua/kk</li>
+                        <li>Kaikki Starter-ominaisuudet</li>
+                        <li>Prioriteettituki</li>
+                        <li>API-rajapinta</li>
+                        <li>Mukautetut raportit</li>
+                        <li>Webhook-integraatiot</li>
+                    </ul>
+                    <a href="https://apps.shopify.com/thinkdigi-invoice-hub" class="btn btn-primary">Aloita ilmaiseksi</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Enterprise</h3>
+                        <div class="pricing-price">
+                            <span class="price">99€</span>
+                            <span class="period">/kk</span>
+                        </div>
+                        <p class="pricing-description">Suuret yritykset</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Rajoittamaton määrä laskuja</li>
+                        <li>Kaikki Professional-ominaisuudet</li>
+                        <li>Oma asiakasvastaava</li>
+                        <li>SLA-sopimus</li>
+                        <li>Mukautetut integraatiot</li>
+                        <li>Koulutus ja konsultointi</li>
+                    </ul>
+                    <a href="https://apps.shopify.com/thinkdigi-invoice-hub" class="btn btn-secondary">Aloita ilmaiseksi</a>
+                </div>
+            </div>
+
+            <div class="pricing-note">
+                <p>Kaikki hinnat sisältävät ALV:n. Ei sitoutumisaikaa, voit peruuttaa milloin tahansa.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Aloita automaattinen laskutus tänään</h2>
+                <p class="cta-description">
+                    Liity satojen suomalaisten Shopify-kauppiaiden joukkoon. 
+                    7 päivän ilmainen kokeilu, ei sitoutumisaikaa.
+                </p>
+                <div class="cta-buttons">
+                    <a href="https://apps.shopify.com/thinkdigi-invoice-hub" class="btn btn-primary btn-large">
+                        Aloita ilmaiseksi
+                    </a>
+                    <a href="mailto:support@thinkdigi.fi" class="btn btn-secondary btn-large">
+                        Ota yhteyttä
+                    </a>
+                </div>
+                <div class="cta-features">
+                    <div class="cta-feature">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>7 päivän ilmainen kokeilu</span>
+                    </div>
+                    <div class="cta-feature">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Ei sitoutumisaikaa</span>
+                    </div>
+                    <div class="cta-feature">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Tuki suomeksi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,96 @@
+{
+  "pricing": {
+    "model": "subscription",
+    "currency": "EUR",
+    "billing_cycle": "monthly",
+    "free_trial": {
+      "duration": 7,
+      "description": "7 päivän ilmainen kokeilu - kaikki ominaisuudet käytössä"
+    },
+    "plans": [
+      {
+        "id": "starter",
+        "name": "Starter",
+        "price": 29.90,
+        "description": "Pienille kaupoille",
+        "features": [
+          "Enintään 10 laskua/kk",
+          "Automaattinen laskutus",
+          "Maventa-integraatio",
+          "ALV-käsittely (kaikki Suomen verokannat)",
+          "Asiakastietojen synkronointi",
+          "Sähköpostituki",
+          "Perustason raportit"
+        ],
+        "limits": {
+          "invoices_per_month": 10,
+          "support_level": "email"
+        }
+      },
+      {
+        "id": "professional", 
+        "name": "Professional",
+        "price": 49,
+        "description": "Kasvavat yritykset",
+        "popular": true,
+        "features": [
+          "Enintään 100 laskua/kk",
+          "Kaikki Starter-ominaisuudet",
+          "Prioriteettituki",
+          "API-rajapinta",
+          "Webhook-integraatiot",
+          "Mukautetut raportit",
+          "Maksumuistutusten automaatio",
+          "Laskupohjien muokkaus"
+        ],
+        "limits": {
+          "invoices_per_month": 100,
+          "support_level": "priority",
+          "api_access": true
+        }
+      },
+      {
+        "id": "enterprise",
+        "name": "Enterprise", 
+        "price": 99,
+        "description": "Suuret yritykset",
+        "features": [
+          "Rajoittamaton määrä laskuja",
+          "Kaikki Professional-ominaisuudet",
+          "Oma asiakasvastaava",
+          "SLA-sopimus (99.9% uptime)",
+          "Mukautetut integraatiot",
+          "Koulutus ja konsultointi",
+          "Puhelintuki",
+          "Prioriteetti-kehitys"
+        ],
+        "limits": {
+          "invoices_per_month": "unlimited",
+          "support_level": "dedicated",
+          "sla": true,
+          "custom_integrations": true
+        }
+      }
+    ],
+    "add_ons": [
+      {
+        "name": "Lisälaskut",
+        "description": "Ylimääräiset laskut Starter ja Professional -paketeissa",
+        "price": 0.50,
+        "unit": "per lasku"
+      },
+      {
+        "name": "Premium-tuki",
+        "description": "Puhelintuki ja prioriteetti-chat",
+        "price": 15,
+        "unit": "per kuukausi"
+      }
+    ],
+    "notes": [
+      "Kaikki hinnat sisältävät ALV:n (24%)",
+      "Ei sitoutumisaikaa - voit peruuttaa milloin tahansa",
+      "Hinnat voivat muuttua 30 päivän ennakkoilmoituksella",
+      "Enterprise-asiakkaille räätälöidyt hinnat saatavilla"
+    ]
+  }
+}

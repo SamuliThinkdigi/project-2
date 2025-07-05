@@ -1,0 +1,26 @@
+# Kuvat tarvitaan
+
+Tähän kansioon tarvitaan seuraavat kuvat:
+
+## Logot ja ikonit
+- logo.svg - Thinkdigi logo (vektoriformaatti)
+- favicon.svg - Favicon (vektoriformaatti)
+- favicon.png - Favicon (32x32px PNG)
+
+## Hero-osio
+- hero-dashboard.png - Dashboard-kuvakaappaus (1200x800px)
+
+## Testimonials
+- testimonial-1.jpg - Maria Virtanen (150x150px)
+- testimonial-2.jpg - Jukka Nieminen (150x150px)
+- testimonial-3.jpg - Anna Koskinen (150x150px)
+
+## Badget
+- badge-gdpr.svg - GDPR-compliance badge
+- badge-shopify.svg - Shopify Partner badge
+- badge-maventa.svg - Maventa Partner badge
+
+## Open Graph
+- og-image.jpg - Sosiaalisen median jakokuva (1200x630px)
+
+Voit käyttää placeholder-kuvia kehityksen aikana ja korvata ne oikeilla kuvilla myöhemmin.
